@@ -1,5 +1,5 @@
 const Property = require("../models/property.models");
-const cloudinary=require('../utils/cloudinary.js')
+const cloudinary = require("../utils/cloudinary.js");
 
 const createProperty = async (req, res) => {
   try {
@@ -33,6 +33,16 @@ const getProperties = async (req, res) => {
   }
 };
 
+const getPropertyById = async (req, res) => {
+  try {
+    const property = await Property.findById(req.params.id);
+    if (!property) return res.status(404).json({ error: "Property not found" });
+    res.status(200).json(property);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 const updateProperty = async (req, res) => {
   try {
     const { id } = req.params;
@@ -54,7 +64,9 @@ const updateProperty = async (req, res) => {
     if (status) property.status = status;
 
     await property.save();
-    res.status(200).json({ message: "Property updated successfully", property });
+    res
+      .status(200)
+      .json({ message: "Property updated successfully", property });
   } catch (error) {
     console.error("Update Property Error:", error);
     res.status(500).json({ error: "Failed to update property" });
@@ -81,4 +93,10 @@ const deleteProperty = async (req, res) => {
   }
 };
 
-module.exports = { createProperty, getProperties, updateProperty, deleteProperty };
+module.exports = {
+  createProperty,
+  getProperties,
+  updateProperty,
+  deleteProperty,
+  getPropertyById,
+};
