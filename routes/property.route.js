@@ -10,7 +10,7 @@ const {
 } = require("../controllers/property.controllers");
 const conditionalUpload = require("../middlewares/conditionalMulter");
 
-router.post("/property", parser.array("files", 10), createProperty);
+router.post("/property", conditionalUpload, createProperty);
 router.get("/property", getProperties);
 router.put("/property/:id", conditionalUpload, updateProperty);
 router.delete("/property/:id", deleteProperty);

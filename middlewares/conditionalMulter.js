@@ -4,7 +4,7 @@ const conditionalUpload = (req, res, next) => {
   const contentType = req.headers["content-type"] || "";
 
   if (contentType.includes("multipart/form-data")) {
-    parser.array("files", 10)(req, res, (err) => {
+    parser.array("fileUploader", 10)(req, res, (err) => {
       if (err) {
         return res.status(400).json({ error: err.message });
       }

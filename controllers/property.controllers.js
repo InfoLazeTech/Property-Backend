@@ -5,24 +5,28 @@ const createProperty = async (req, res) => {
   try {
     const { propertyNo, propertyname, status } = req.body;
 
-    const fileUrls = req.files.map((file) => file.path); // Cloudinary returns URL in `path`
+    if (!propertyNo || !propertyname || !req.files || req.files.length === 0) {
+      return res.status(400).json({ error: "All fields and at least one document are required." });
+    }
+
+    const fileUrls = req.files.map((file) => file.path); // Cloudinary file URL
 
     const newProperty = new Property({
       propertyNo,
       propertyname,
-      status,
+      status, // Optional - Mongoose will apply default if not provided
       fileUploader: fileUrls,
     });
 
     await newProperty.save();
 
-    res
-      .status(201)
-      .json({ message: "Property created", property: newProperty });
+    res.status(201).json({ message: "Property created", property: newProperty });
   } catch (error) {
+    console.error("Error creating property:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 const getProperties = async (req, res) => {
   try {
